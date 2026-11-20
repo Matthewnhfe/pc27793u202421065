@@ -1,5 +1,6 @@
 package com.medisupply.platform.u202421065.shared.infrastructure.persistence.jpa.configuration.strategy;
 
+
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
 import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
