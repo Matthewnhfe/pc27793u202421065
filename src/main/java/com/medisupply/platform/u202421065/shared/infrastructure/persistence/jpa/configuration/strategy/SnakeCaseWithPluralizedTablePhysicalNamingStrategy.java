@@ -5,8 +5,6 @@ import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
 import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
 
-import static io.github.encryptorcode.pluralize.Pluralize.pluralize;
-
 
 public class SnakeCaseWithPluralizedTablePhysicalNamingStrategy implements PhysicalNamingStrategy {
     @Override
@@ -47,8 +45,26 @@ public class SnakeCaseWithPluralizedTablePhysicalNamingStrategy implements Physi
     }
 
     private Identifier toPlural(final Identifier identifier) {
+        if (identifier == null) {
+            return null;
+        }
+
         final String text = identifier.getText();
-        final String newName = text.endsWith("s") ? text : pluralize(text);
+        final String lowerText = text.toLowerCase();
+        final String newName;
+
+        if (lowerText.endsWith("s") || lowerText.endsWith("x")
+                || lowerText.endsWith("z") || lowerText.endsWith("ch")
+                || lowerText.endsWith("sh")) {
+            newName = text + "es";
+        } else if (lowerText.endsWith("y")
+                && lowerText.length() > 1
+                && !"aeiou".contains(lowerText.substring(lowerText.length() - 2, lowerText.length() - 1))) {
+            newName = text.substring(0, text.length() - 1) + "ies";
+        } else {
+            newName = text + "s";
+        }
+
         return Identifier.toIdentifier(newName);
     }
 }
